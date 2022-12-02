@@ -11,11 +11,12 @@ import pandas as pd
 
 
 def get_data():
-    if os.path.exists("clean_data.csv"):
+    if os.path.exists("clean_data.csv") and os.path.exists("aggregate_data.csv"):
         df = pd.read_csv("clean_data.csv")
-        return df
+        df_aggr = pd.read_csv(("aggregate_data.csv"))
+        return df, df_aggr
     else:
-        return None
+        return None, None
 
 
 def assign_colors():
@@ -49,8 +50,29 @@ def get_regular_premium_scatterplot(df):
     return regular_premium_scatterplot
 
 
+def get_price_heatmap(df):
+    price_heatmap = dcc.Graph(
+        id="price_heatmap",
+        figure={
+            "data": [
+                go.Heatmap(
+                    x=df["longitude_int"],
+                    y=df["latitude_int"],
+                    z=df["regular_mean"].values.tolist(),
+                )
+            ],
+            "layout": go.Layout(
+                title="Mean gas prices by latitude and longitude",
+                xaxis={"title": "Longitude"},
+                yaxis={"title": "Latitude"},
+            ),
+        },
+    )
+    return price_heatmap
+
+
 def run_dash_app(host, port, debug):
-    df = get_data()
+    df, aggr_df = get_data()
 
     if df is None:
         print("Datafile does not exist")
@@ -65,6 +87,7 @@ def run_dash_app(host, port, debug):
                     style={"textAlign": "center", "color": colors["text"]},
                 ),
                 get_regular_premium_scatterplot(df),
+                get_price_heatmap(aggr_df),
             ],
             style={"backgroundColor": colors["background"]},
         )
