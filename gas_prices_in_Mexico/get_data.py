@@ -1,3 +1,4 @@
+import os
 import requests
 import pandas as pd
 
@@ -8,25 +9,17 @@ def get_data(n_results):
     )
     raw_data = requests.get(url)
     json_data = raw_data.json()
+
+    return json_data
+
+
+def save_data(json_data, n_results):
     df = pd.DataFrame(json_data["results"], index=list(range(0, n_results)))
-
-    df["regular"] = pd.to_numeric(df["regular"])
-    df["premium"] = pd.to_numeric(df["premium"])
-    df = df[(df["regular"] > 0) & (df["premium"] > 0)]  # remove 0 price values
-    return df
+    df.to_csv("raw_data.csv")
+    pass
 
 
-def save_data(df):
+def make_data_file(n_results=5000):
     if not os.path.isfile("raw_data.csv"):
-        # write file
-        pass
-
-
-def main():
-    df = get_data(n_results=5000)
-    save_data(df)
-
-
-if __name__ == "__main__":
-
-    main()
+        json_data = get_data(n_results)
+        save_data(json_data, n_results)
