@@ -20,7 +20,9 @@ def get_data():
 
 
 def assign_colors():
-    colors = {"background": "#111111", "text": "#7FDBFF"}
+    colors = {"background": "#272b30",
+        "text": "#7FDBFF"
+    }
     return colors
 
 
@@ -59,12 +61,13 @@ def get_price_heatmap(df):
                     x=df["longitude_int"],
                     y=df["latitude_int"],
                     z=df["regular_mean"].values.tolist(),
+                    # zsmooth = 'fast',
                 )
             ],
             "layout": go.Layout(
                 title="Mean gas prices by latitude and longitude",
                 xaxis={"title": "Longitude"},
-                yaxis={"title": "Latitude"},
+                yaxis={"title": "Latitude", "scaleanchor": "x"}
             ),
         },
     )
@@ -86,6 +89,7 @@ def run_dash_app(host, port, debug):
                     "Gas prices in Mexico",
                     style={"textAlign": "center", "color": colors["text"]},
                 ),
+                # get_KPIs(df),
                 get_regular_premium_scatterplot(df),
                 get_price_heatmap(aggr_df),
             ],
