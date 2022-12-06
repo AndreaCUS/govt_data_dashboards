@@ -20,9 +20,7 @@ def get_data():
 
 
 def assign_colors():
-    colors = {"background": "#272b30",
-        "text": "#7FDBFF"
-    }
+    colors = {"background": "#d0d2d6", "text": "#292d33"}
     return colors
 
 
@@ -67,7 +65,7 @@ def get_price_heatmap(df):
             "layout": go.Layout(
                 title="Mean gas prices by latitude and longitude",
                 xaxis={"title": "Longitude"},
-                yaxis={"title": "Latitude", "scaleanchor": "x"}
+                yaxis={"title": "Latitude", "scaleanchor": "x"},
             ),
         },
     )
